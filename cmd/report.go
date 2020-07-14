@@ -24,13 +24,12 @@ import (
 // reportCmd represents the report command
 var reportCmd = &cobra.Command{
 	Use:   "report",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Write today's daily report.",
+	Long: `This is a command to write a daily report. 
+	If the today's daily report has not been created yet, 
+	it will create an empty daily report with the contents 
+	specified in the template inserted. 
+	If you already have a daily report, open it.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("report called")
 	},

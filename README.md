@@ -36,7 +36,7 @@ daily config
 and this configuration file format is under.
 
 ```toml
-# File: $HOME/.config/daily.toml
+# File: $HOME/.config/daily/daily.toml
 reportDir = "path to daily report file directory"
 fileName = "daily-report"
 templateFile = "path to template file"
