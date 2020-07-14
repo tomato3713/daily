@@ -25,7 +25,7 @@ import (
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create an configuration file",
-	Long: `Create a configuration file ($HOME/.config/daily/daily.yaml). 
+	Long: `Create a configuration file ($HOME/.config/daily/config.yaml). 
 	It will fail if the config file already exists.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("create called")

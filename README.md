@@ -38,7 +38,7 @@ and this configuration file format is under.
 ```toml
 # File: $HOME/.config/daily/daily.toml
 reportDir = "path to daily report file directory"
-fileName = "daily-report"
+fileNameFormat = "${yyyy}-${mm}-${dd}-daily-report.md"
 templateFile = "path to template file"
 pluginDir = "path to plugin directory"
 

@@ -1,0 +1,8 @@
+ReportDir = "$HOME/.config/reports"
+FileNameFormat = "${yyyy}-${mm}-${dd}-daily-report.md"
+TemplateFile = "$HOME/.config/template.md"
+PluginDir = "$HOME/.config/plugins"
+
+[Serve]
+TemplateBodyFile = "$HOME/.config/index.html"
+AssetsDir = "$HOME/.config/assets"

@@ -25,8 +25,28 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Configuration
+type Config struct {
+	ReportDir      string      // path to daily report file directory
+	FileNameFormat string      // daily-report
+	TemplateFile   string      // path to template file
+	PluginDir      string      // path to plugin directory
+	Serve          ServeConfig // for http server
+}
+
+type ServeConfig struct {
+	TemplateBodyFile string // path to index.html
+	AssetsDir        string // path to assets directory
+}
+
 var cfgFile string
 var debug bool
+var config Config
+
+func (c Config) String() string {
+	return fmt.Sprintf("Daily Report Dir: %s\nFile Name Format: %s\nDaily report Template File: %s\nPlugins Dir: %s\nServe:\n\tTemplate Body File: %s\n\tAssets Dir: %s\n",
+		c.ReportDir, c.FileNameFormat, c.TemplateFile, c.PluginDir, c.Serve.TemplateBodyFile, c.Serve.AssetsDir)
+}
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -52,9 +72,8 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/daily/daily.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/daily/config.toml)")
 	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "Show debug message")
-
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -75,9 +94,9 @@ func initConfig() {
 		}
 		cfgDir := filepath.Join(home, `.config`, `daily`)
 
-		// Search config in home directory with name ".daily" (without extension).
+		// Search config in home directory with name ".config/daily/" (without extension).
 		viper.AddConfigPath(cfgDir)
-		viper.SetConfigName("daily")
+		viper.SetConfigName("config")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
@@ -85,5 +104,10 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
+	}
+
+	if err := viper.Unmarshal(&config); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }

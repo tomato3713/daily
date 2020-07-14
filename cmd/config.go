@@ -24,10 +24,10 @@ import (
 // configCmd represents the config command
 var configCmd = &cobra.Command{
 	Use:   "config",
-	Short: "Open the configuration file",
-	Long: `Open the configuration file ($HOME/.config/daily/daily.yaml).`,
+	Short: "show the configuration",
+	Long: `Open the configuration file ($HOME/.config/daily/config.toml).`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("config called")
+		fmt.Printf("%v", config)
 	},
 }
 
