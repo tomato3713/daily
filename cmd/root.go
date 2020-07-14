@@ -73,10 +73,11 @@ func initConfig() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
+		cfgDir := filepath.Join(home, `.config`, `daily`)
 
 		// Search config in home directory with name ".daily" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".daily")
+		viper.AddConfigPath(cfgDir)
+		viper.SetConfigName("daily")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
