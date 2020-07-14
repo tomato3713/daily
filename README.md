@@ -7,6 +7,7 @@ This command is for daily report.
 ## Usage
 
 ### report
+*Not implemented*
 This subcommand is for writing daily report at today.
 So, make today daily report file if it is not exists, initialized by template file.
 This default file name is "yyyy-mm-dd-daily-report.md".
@@ -16,6 +17,7 @@ daily report
 ```
 
 ### serve
+*Not implemented*
 Serve daily report directory.
 
 ```sh
@@ -23,6 +25,7 @@ daily serve
 ```
 
 ### config
+*now implementing*
 There are sub command for configuration.
 
 ```
