@@ -19,12 +19,14 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
+	"path/filepath"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
 var cfgFile string
+var debug bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -51,6 +53,8 @@ func init() {
 	// will be global for your application.
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/daily/daily.yaml)")
+	rootCmd.PersistentFlags().BoolVar(&debug, "debug", false, "Show debug message")
+
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
