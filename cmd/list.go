@@ -25,7 +25,7 @@ import (
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Display a list of past daily reports.",
-	Long: `Write a list of past daily reports to standard output.`,
+	Long:  `Write a list of past daily reports to standard output.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("list called")
 	},

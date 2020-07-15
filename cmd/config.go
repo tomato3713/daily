@@ -25,7 +25,7 @@ import (
 var configCmd = &cobra.Command{
 	Use:   "config",
 	Short: "show the configuration",
-	Long: `Open the configuration file ($HOME/.config/daily/config.toml).`,
+	Long:  `Open the configuration file ($HOME/.config/daily/config.toml).`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("===\n%v", config)
 	},

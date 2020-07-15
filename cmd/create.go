@@ -17,6 +17,9 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"io/ioutil"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
@@ -25,10 +28,42 @@ import (
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create an configuration file",
-	Long: `Create a configuration file ($HOME/.config/daily/config.yaml). 
+	Long: `Create a configuration file ($HOME/.config/daily/config.toml). 
 	It will fail if the config file already exists.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("create called")
+		// create configuration file and directory if it is not exists.
+		// Find home directory.
+		fmt.Println("Create configuration file: ", cfgFile)
+
+		root := filepath.Dir(cfgFile)
+		if _, err := os.Stat(root); err != nil {
+			if !os.IsNotExist(err) {
+				os.Exit(1)
+			}
+			err := os.MkdirAll(root, 0755)
+			if err != nil {
+				os.Exit(1)
+			}
+		}
+
+		_, err := os.Stat(cfgFile)
+		confExists := err == nil
+		if !confExists {
+			// TODO: rewrite
+			contents := []byte(fmt.Sprintln(`ReportDir = "$HOME/.config/reports"
+FileNameFormat = "${yyyy}-${mm}-${dd}-daily-report.md"
+TemplateFile = "$HOME/.config/template.md"
+PluginDir = "$HOME/.config/plugins"
+
+[Serve]
+TemplateBodyFile = "$HOME/.config/index.html"
+AssetsDir = "$HOME/.config/assets"`))
+
+			if err = ioutil.WriteFile(cfgFile, contents, 0644); err != nil {
+				os.Exit(1)
+			}
+		}
+		fmt.Println(config)
 	},
 }
 

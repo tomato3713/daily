@@ -25,7 +25,7 @@ import (
 var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Start http server",
-	Long: `Start http server to display past daily reports.`,
+	Long:  `Start http server to display past daily reports.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("serve called")
 	},

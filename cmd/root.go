@@ -93,6 +93,7 @@ func initConfig() {
 			os.Exit(1)
 		}
 		cfgDir := filepath.Join(home, `.config`, `daily`)
+		cfgFile = filepath.Join(cfgDir, `config.toml`)
 
 		// Search config in home directory with name ".config/daily/" (without extension).
 		viper.AddConfigPath(cfgDir)
