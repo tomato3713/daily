@@ -25,11 +25,11 @@ daily serve
 ```
 
 ### config
-*now implementing*
+*no test code*
 There are sub command for configuration.
 
 ```
-# make new cofiguration file.
+# make new cofiguration file in $HOME/.config/daily/daily.toml if not exists.
 daily config create
 
 # show config file
@@ -48,6 +48,15 @@ pluginDir = "path to plugin directory"
 [Serve]
 templateBodyFile = "path to index.html"
 assetsDir = "path to assets directory"
+```
+
+### Global Option
+
+- `---config`
+Set the path to configuration file.
+Example:
+```
+daily config --config .
 ```
 
 ### Thanks
