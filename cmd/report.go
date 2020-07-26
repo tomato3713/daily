@@ -30,9 +30,11 @@ var reportCmd = &cobra.Command{
 	it will create an empty daily report with the contents 
 	specified in the template inserted. 
 	If you already have a daily report, open it.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("report called")
-	},
+	Run: report,
+}
+
+func report(cmd *cobra.Command, args []string) {
+	fmt.Println("report called")
 }
 
 func init() {
