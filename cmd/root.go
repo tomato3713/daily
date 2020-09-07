@@ -111,4 +111,15 @@ func initConfig() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+
+	// replace environmental variables.
+	expandEnv(&config)
+}
+
+func expandEnv(cfg *Config) {
+	cfg.ReportDir = os.ExpandEnv(cfg.ReportDir)
+	cfg.TemplateFile = os.ExpandEnv(cfg.TemplateFile)
+	cfg.PluginDir = os.ExpandEnv(cfg.PluginDir)
+	cfg.Serve.TemplateBodyFile = os.ExpandEnv(cfg.Serve.TemplateBodyFile)
+	cfg.Serve.AssetsDir = os.ExpandEnv(cfg.Serve.AssetsDir)
 }

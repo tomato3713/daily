@@ -16,9 +16,8 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+	"os"
 )
 
 // reportCmd represents the report command
@@ -34,7 +33,23 @@ var reportCmd = &cobra.Command{
 }
 
 func report(cmd *cobra.Command, args []string) {
-	fmt.Println("report called")
+	// make daily report directory if not exists.
+	if err := makeDailyReportDirecotry(config.ReportDir); err != nil {
+		os.Exit(1)
+	}
+
+	// load daily report format file
+}
+
+func makeDailyReportDirecotry(dir string) error {
+	if _, err := os.Stat(dir); err != nil {
+		if !os.IsNotExist(err) {
+			os.Exit(1)
+		}
+		err := os.MkdirAll(dir, 0755)
+		return err
+	}
+	return nil
 }
 
 func init() {
