@@ -17,9 +17,26 @@ package cmd
 
 import (
 	"fmt"
-
 	"github.com/spf13/cobra"
+	"html/template"
+	"io/ioutil"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"runtime"
+	"time"
 )
+
+const templContent = `# {{.Date}}
+---
+
+## abstract
+
+## body
+
+## comments
+
+`
 
 // reportCmd represents the report command
 var reportCmd = &cobra.Command{
@@ -30,9 +47,90 @@ var reportCmd = &cobra.Command{
 	it will create an empty daily report with the contents 
 	specified in the template inserted. 
 	If you already have a daily report, open it.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("report called")
-	},
+	Run: report,
+}
+
+func report(cmd *cobra.Command, args []string) {
+	// make daily report directory if not exists.
+	if err := makeDailyReportDirecotry(config.ReportDir); err != nil {
+		os.Exit(1)
+	}
+
+	fname := getFilename()
+	file := filepath.Join(config.ReportDir, fname)
+
+	if fileExists(file) {
+		// open file and edit
+		fmt.Println("open: ", file)
+		if err := runCmd(config.Editor, file); err != nil {
+			os.Exit(1)
+		}
+	}
+
+	// make new daily report
+	fmt.Println("make new daily report:", file)
+	// load daily report template file
+	templStr := templContent
+	if fileExists(filepath.Join(config.TemplateFile)) {
+		b, err := ioutil.ReadFile(config.TemplateFile)
+		if err != nil {
+			os.Exit(1)
+		}
+		templStr = string(b)
+	}
+	templ := template.Must(template.New("report").Parse(templStr))
+
+	f, err := os.Create(file)
+	if err != nil {
+		os.Exit(1)
+	}
+
+	err = templ.Execute(f, struct {
+		Date string
+	}{
+		time.Now().Format("2006/01/02"),
+	})
+	f.Close()
+	if err != nil {
+		os.Exit(1)
+	}
+	if err := runCmd(config.Editor, file); err != nil {
+		os.Exit(1)
+	}
+}
+
+func runCmd(command, file string) error {
+	var cmd *exec.Cmd
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("cmd", "/c", command, file)
+	} else {
+		cmd = exec.Command("sh", "-c", command, file)
+	}
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+	return cmd.Run()
+}
+
+func fileExists(filename string) bool {
+	_, err := os.Stat(filename)
+	return err == nil
+}
+
+func getFilename() string {
+	t := time.Now()
+	return fmt.Sprintf("%s-daily-report.md", t.Format("2006-01-02"))
+}
+
+func makeDailyReportDirecotry(dir string) error {
+	if _, err := os.Stat(dir); err != nil {
+		if !os.IsNotExist(err) {
+			return err
+		}
+		err := os.MkdirAll(dir, 0755)
+		return err
+	}
+	return nil
 }
 
 func init() {
