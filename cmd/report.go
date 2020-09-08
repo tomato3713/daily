@@ -18,12 +18,25 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"html/template"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"time"
 )
+
+const templContent = `# {{.Date}}
+---
+
+## abstract
+
+## body
+
+## comments
+
+`
 
 // reportCmd represents the report command
 var reportCmd = &cobra.Command{
@@ -48,14 +61,42 @@ func report(cmd *cobra.Command, args []string) {
 
 	if fileExists(file) {
 		// open file and edit
-		fmt.Println("open: %s\n", file)
+		fmt.Println("open: ", file)
 		if err := runCmd(config.Editor, file); err != nil {
 			os.Exit(1)
 		}
 	}
 
 	// make new daily report
-	// load daily report format file
+	fmt.Println("make new daily report:", file)
+	// load daily report template file
+	templStr := templContent
+	if fileExists(filepath.Join(config.TemplateFile)) {
+		b, err := ioutil.ReadFile(config.TemplateFile)
+		if err != nil {
+			os.Exit(1)
+		}
+		templStr = string(b)
+	}
+	templ := template.Must(template.New("report").Parse(templStr))
+
+	f, err := os.Create(file)
+	if err != nil {
+		os.Exit(1)
+	}
+
+	err = templ.Execute(f, struct {
+		Date string
+	}{
+		time.Now().Format("2006/01/02"),
+	})
+	f.Close()
+	if err != nil {
+		os.Exit(1)
+	}
+	if err := runCmd(config.Editor, file); err != nil {
+		os.Exit(1)
+	}
 }
 
 func runCmd(command, file string) error {
