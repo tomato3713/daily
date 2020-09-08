@@ -7,7 +7,6 @@ This command is for daily report.
 ## Usage
 
 ### report
-*Not implemented*
 This subcommand is for writing daily report at today.
 So, make today daily report file if it is not exists, initialized by template file.
 This file name is "yyyy-mm-dd-daily-report.md".
@@ -18,6 +17,7 @@ daily report
 
 ### serve
 *Not implemented*
+
 Serve daily report directory.
 
 ```sh
@@ -26,9 +26,10 @@ daily serve
 
 ### config
 *no test code*
+
 There are sub command for configuration.
 
-```
+```sh
 # make new cofiguration file in $HOME/.config/daily/daily.toml if not exists.
 daily config create
 
@@ -48,6 +49,24 @@ Editor = "code"
 [Serve]
 templateBodyFile = "path to index.html"
 assetsDir = "path to assets directory"
+```
+
+### list
+*no implemented*
+
+Show daily report list.
+```sh
+daily list
+```
+
+### cat
+*no implemented*
+
+Prints daily report you want.
+This command find in `reportDir` in configuration file.
+
+```sh
+daily cat
 ```
 
 ### Global Option
