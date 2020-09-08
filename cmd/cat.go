@@ -17,6 +17,9 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
+	"path/filepath"
 
 	"github.com/spf13/cobra"
 )
@@ -25,8 +28,8 @@ import (
 var catCmd = &cobra.Command{
 	Use:   "cat",
 	Short: "print daily report you want.",
-	Long: `print daily report you want. Search 'ReportDir' in the configuration file. `,
-	Run: Cat,
+	Long:  `print daily report you want. Search 'ReportDir' in the configuration file. `,
+	Run:   Cat,
 }
 
 func init() {
@@ -44,4 +47,34 @@ func init() {
 }
 
 func Cat(cmd *cobra.Command, args []string) {
+	if len(args) == 3 {
+		if err := printFile(args[0], args[1], args[2]); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	}
+	os.Exit(1)
+}
+
+func printFile(year, month, day string) error {
+	fname := fmt.Sprintf("%s-%s-%s-daily-report.md", year, month, day)
+	file := filepath.Join(config.ReportDir, fname)
+
+	if fileExists(file) {
+		// open file and edit
+		f, err := os.Open(file)
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+
+		b, err := ioutil.ReadAll(f)
+		if err != nil {
+			return err
+		}
+
+		fmt.Println(string(b))
+		return nil
+	}
+	return fmt.Errorf("Error: Can's open %s", file)
 }
