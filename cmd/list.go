@@ -29,7 +29,7 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Display a list of past daily reports.",
 	Long:  `Write a list of past daily reports to standard output.`,
-	Run: List,
+	Run:   List,
 }
 
 func init() {
@@ -46,7 +46,7 @@ func init() {
 	// listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-func List(cmd *cobra.Command, args[]string) {
+func List(cmd *cobra.Command, args []string) {
 	f, err := os.Open(config.ReportDir)
 	if err != nil {
 		os.Exit(1)
