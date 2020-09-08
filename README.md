@@ -52,9 +52,9 @@ assetsDir = "path to assets directory"
 ```
 
 ### list
-*no implemented*
+*Partly implemented*
 
-Show daily report list.
+Show daily report file path list and part of contents.
 ```sh
 daily list
 ```
