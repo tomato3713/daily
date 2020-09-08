@@ -27,11 +27,11 @@ import (
 
 // Configuration
 type Config struct {
-	ReportDir      string      // path to daily report file directory
-	FileNameFormat string      // daily-report
-	TemplateFile   string      // path to template file
-	PluginDir      string      // path to plugin directory
-	Serve          ServeConfig // for http server
+	ReportDir    string      // path to daily report file directory
+	TemplateFile string      // path to template file
+	PluginDir    string      // path to plugin directory
+	Editor       string      // text editor command
+	Serve        ServeConfig // for http server
 }
 
 type ServeConfig struct {
@@ -45,7 +45,7 @@ var config Config
 
 func (c Config) String() string {
 	return fmt.Sprintf("Daily Report Dir: %s\nFile Name Format: %s\nDaily report Template File: %s\nPlugins Dir: %s\nServe:\n\tTemplate Body File: %s\n\tAssets Dir: %s\n",
-		c.ReportDir, c.FileNameFormat, c.TemplateFile, c.PluginDir, c.Serve.TemplateBodyFile, c.Serve.AssetsDir)
+		c.ReportDir, c.TemplateFile, c.PluginDir, c.Serve.TemplateBodyFile, c.Serve.AssetsDir)
 }
 
 // rootCmd represents the base command when called without any subcommands

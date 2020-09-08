@@ -16,8 +16,13 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 	"os"
+	"os/exec"
+	"path/filepath"
+	"runtime"
+	"time"
 )
 
 // reportCmd represents the report command
@@ -38,13 +43,48 @@ func report(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
+	fname := getFilename()
+	file := filepath.Join(config.ReportDir, fname)
+
+	if fileExists(file) {
+		// open file and edit
+		fmt.Println("open: %s\n", file)
+		if err := runCmd(config.Editor, file); err != nil {
+			os.Exit(1)
+		}
+	}
+
+	// make new daily report
 	// load daily report format file
+}
+
+func runCmd(command, file string) error {
+	var cmd *exec.Cmd
+	if runtime.GOOS == "windows" {
+		cmd = exec.Command("cmd", "/c", command, file)
+	} else {
+		cmd = exec.Command("sh", "-c", command, file)
+	}
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+	return cmd.Run()
+}
+
+func fileExists(filename string) bool {
+	_, err := os.Stat(filename)
+	return err == nil
+}
+
+func getFilename() string {
+	t := time.Now()
+	return fmt.Sprintf("%s-daily-report.md", t.Format("2006-01-02"))
 }
 
 func makeDailyReportDirecotry(dir string) error {
 	if _, err := os.Stat(dir); err != nil {
 		if !os.IsNotExist(err) {
-			os.Exit(1)
+			return err
 		}
 		err := os.MkdirAll(dir, 0755)
 		return err
