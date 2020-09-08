@@ -17,6 +17,9 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
+	"sort"
 
 	"github.com/spf13/cobra"
 )
@@ -26,9 +29,7 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "Display a list of past daily reports.",
 	Long:  `Write a list of past daily reports to standard output.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
-	},
+	Run: List,
 }
 
 func init() {
@@ -43,4 +44,27 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// listCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func List(cmd *cobra.Command, args[]string) {
+	f, err := os.Open(config.ReportDir)
+	if err != nil {
+		os.Exit(1)
+	}
+	defer f.Close()
+
+	files, err := f.Readdirnames(-1)
+	if err != nil {
+		os.Exit(1)
+	}
+	files = sortByDate(files)
+
+	for _, file := range files {
+		fmt.Println(filepath.Join(config.ReportDir, file))
+	}
+}
+
+func sortByDate(files []string) []string {
+	sort.Sort(sort.Reverse(sort.StringSlice(files)))
+	return files
 }
