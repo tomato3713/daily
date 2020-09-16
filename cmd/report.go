@@ -17,14 +17,13 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"html/template"
 	"io/ioutil"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"runtime"
 	"time"
+
+	"github.com/spf13/cobra"
 )
 
 const templContent = `# {{.Date}}
@@ -62,7 +61,7 @@ func report(cmd *cobra.Command, args []string) {
 	if fileExists(file) {
 		// open file and edit
 		fmt.Println("open: ", file)
-		if err := runCmd(config.Editor, file); err != nil {
+		if err := runCmd(config.Editor, os.Stdin, os.Stdout, file); err != nil {
 			os.Exit(1)
 		}
 	}
@@ -94,27 +93,9 @@ func report(cmd *cobra.Command, args []string) {
 	if err != nil {
 		os.Exit(1)
 	}
-	if err := runCmd(config.Editor, file); err != nil {
+	if err := runCmd(config.Editor, os.Stdout, os.Stdin, file); err != nil {
 		os.Exit(1)
 	}
-}
-
-func runCmd(command, file string) error {
-	var cmd *exec.Cmd
-	if runtime.GOOS == "windows" {
-		cmd = exec.Command("cmd", "/c", command, file)
-	} else {
-		cmd = exec.Command("sh", "-c", command, file)
-	}
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
-	cmd.Stdin = os.Stdin
-	return cmd.Run()
-}
-
-func fileExists(filename string) bool {
-	_, err := os.Stat(filename)
-	return err == nil
 }
 
 func getFilename() string {

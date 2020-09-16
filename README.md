@@ -67,13 +67,16 @@ daily list
 ```
 
 ### cat
-*no implemented*
+*partly implemented*
 
 Prints daily report you want.
 This command find in `reportDir` in configuration file.
 
 ```sh
 daily cat
+
+# print daily report content of yyyy/mm/dd.
+daily cat yyyy mm dd
 ```
 
 ### Global Option
