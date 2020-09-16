@@ -6,10 +6,11 @@ This command is for daily report.
 
 # Installation
 
-1. Run command: `go get github.com/tomato3713/daily`.
-2. Run Command: `daily config create`.
-3. Set your favorite text editor to `Editor` in the configuration file.
-4. start writing your daily report. Run Command: `daily report`. If occured any error, please open issues.
+1. Install [fzf](https://github.com/junegunn/fzf) command.
+2. Run command: `go get github.com/tomato3713/daily`.
+3. Run Command: `daily config create`.
+4. Set your favorite text editor to `Editor` in the configuration file.
+5. start writing your daily report. Run Command: `daily report`. If occured any error, please open issues.
 
 ## Usage
 
@@ -67,13 +68,11 @@ daily list
 ```
 
 ### cat
-*partly implemented*
-
 Prints daily report you want.
 This command find in `reportDir` in configuration file.
 
 ```sh
-daily cat
+daily cat # required fzf command for file selection
 
 # print daily report content of yyyy/mm/dd.
 daily cat yyyy mm dd
