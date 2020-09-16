@@ -16,10 +16,13 @@ limitations under the License.
 package cmd
 
 import (
+	"bytes"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -53,7 +56,58 @@ func Cat(cmd *cobra.Command, args []string) {
 			os.Exit(1)
 		}
 	}
-	os.Exit(1)
+
+	if len(args) != 0 {
+		os.Exit(1)
+	}
+
+	files, err := selectFile()
+	if err != nil {
+		os.Exit(1)
+	}
+
+	for _, file := range files {
+		f, err := os.Open(file)
+		if err != nil {
+			os.Exit(1)
+		}
+		defer f.Close()
+
+		b, err := ioutil.ReadAll(f)
+		if err != nil {
+			os.Exit(1)
+		}
+
+		fmt.Println(string(b))
+	}
+}
+
+func selectFile() ([]string, error) {
+	var files []string
+	f, err := os.Open(config.ReportDir)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	files, err = f.Readdirnames(-1)
+	if err != nil {
+		return nil, err
+	}
+
+	var buf bytes.Buffer
+	err = runCmd("fzf", strings.NewReader(strings.Join(files, "\n")), &buf)
+	if err != nil {
+		return nil, err
+	}
+
+	if buf.Len() == 0 {
+		return nil, errors.New("No selected files")
+	}
+	selectFiles := strings.Split(strings.TrimSpace(buf.String()), "\n")
+	for i, file := range files {
+		selectFiles[i] = filepath.Join(config.ReportDir, file)
+	}
+	return selectFiles, nil
 }
 
 func printFile(year, month, day string) error {
@@ -61,7 +115,6 @@ func printFile(year, month, day string) error {
 	file := filepath.Join(config.ReportDir, fname)
 
 	if fileExists(file) {
-		// open file and edit
 		f, err := os.Open(file)
 		if err != nil {
 			return err
