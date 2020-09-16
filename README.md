@@ -4,6 +4,13 @@
 
 This command is for daily report.
 
+# Installation
+
+1. Run command: `go get github.com/tomato3713/daily`.
+2. Run Command: `daily config create`.
+3. Set your favorite text editor to `Editor` in the configuration file.
+4. start writing your daily report. Run Command: `daily report`. If occured any error, please open issues.
+
 ## Usage
 
 ### report
