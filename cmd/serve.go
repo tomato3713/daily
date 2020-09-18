@@ -16,6 +16,10 @@ limitations under the License.
 package cmd
 
 import (
+	"fmt"
+	"net/http"
+
+	"github.com/pkg/browser"
 	"github.com/spf13/cobra"
 )
 
@@ -42,4 +46,12 @@ func init() {
 }
 
 func Serve(cmd *cobra.Command, args []string) {
+	port := ":8080"
+	url := "http://localhost" + port
+
+	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+		fmt.Fprintf(w, "hello world")
+	})
+	browser.OpenURL(url)
+	http.ListenAndServe(port, nil)
 }
