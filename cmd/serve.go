@@ -16,8 +16,6 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -26,9 +24,7 @@ var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Start http server",
 	Long:  `Start http server to display past daily reports.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("serve called")
-	},
+	Run:   Serve,
 }
 
 func init() {
@@ -43,4 +39,7 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// serveCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func Serve(cmd *cobra.Command, args []string) {
 }
