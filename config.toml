@@ -4,5 +4,6 @@ PluginDir = "$HOME/.config/daily/plugins"
 Editor = "code"
 
 [Serve]
-TemplateBodyFile = "$HOME/.config/daily/index.html"
+TemplateIndexFile = "$HOME/.config/daily/index.tmpl"
+TemplateBodyFile = "$HOME/.config/daily/index.tmpl"
 AssetsDir = "$HOME/.config/daily/assets"

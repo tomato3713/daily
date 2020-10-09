@@ -17,9 +17,10 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
 	"path/filepath"
+
+	"github.com/spf13/cobra"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -35,8 +36,9 @@ type Config struct {
 }
 
 type ServeConfig struct {
-	TemplateBodyFile string // path to index.html
-	AssetsDir        string // path to assets directory
+	TemplateIndexFile string // path to daily report list page template
+	TemplateBodyFile  string // path to daily report page template
+	AssetsDir         string // path to assets directory
 }
 
 var cfgFile string
@@ -44,8 +46,8 @@ var debug bool
 var config Config
 
 func (c Config) String() string {
-	return fmt.Sprintf("Daily Report Dir: %s\nFile Name Format: %s\nDaily report Template File: %s\nPlugins Dir: %s\nServe:\n\tTemplate Body File: %s\n\tAssets Dir: %s\n",
-		c.ReportDir, c.TemplateFile, c.PluginDir, c.Serve.TemplateBodyFile, c.Serve.AssetsDir)
+	return fmt.Sprintf("Daily Report Dir: %s\nFile Name Format: %s\nDaily report Template File: %s\nPlugins Dir: %s\nServe:\n\tTemplate Index File: %s\n\tTemplate Body File: %s\n\tAssets Dir: %s\n",
+		c.ReportDir, c.TemplateFile, c.PluginDir, c.Serve.TemplateIndexFile, c.Serve.TemplateBodyFile, c.Serve.AssetsDir)
 }
 
 // rootCmd represents the base command when called without any subcommands
@@ -120,6 +122,7 @@ func expandEnv(cfg *Config) {
 	cfg.ReportDir = os.ExpandEnv(cfg.ReportDir)
 	cfg.TemplateFile = os.ExpandEnv(cfg.TemplateFile)
 	cfg.PluginDir = os.ExpandEnv(cfg.PluginDir)
+	cfg.Serve.TemplateIndexFile = os.ExpandEnv(cfg.Serve.TemplateIndexFile)
 	cfg.Serve.TemplateBodyFile = os.ExpandEnv(cfg.Serve.TemplateBodyFile)
 	cfg.Serve.AssetsDir = os.ExpandEnv(cfg.Serve.AssetsDir)
 }
