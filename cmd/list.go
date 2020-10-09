@@ -19,7 +19,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"sort"
 
 	"github.com/spf13/cobra"
 )
@@ -62,9 +61,4 @@ func List(cmd *cobra.Command, args []string) {
 	for _, file := range files {
 		fmt.Println(filepath.Join(config.ReportDir, file))
 	}
-}
-
-func sortByDate(files []string) []string {
-	sort.Sort(sort.Reverse(sort.StringSlice(files)))
-	return files
 }

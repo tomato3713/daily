@@ -24,13 +24,17 @@ daily report
 ```
 
 ### serve
-*Not implemented*
-
 Serve daily report directory.
 
 ```sh
 daily serve
 ```
+
+| Env Var | Value               |
+| ---     | ---                 |
+| Name    | Report file name    |
+| Date    | Report Written Date |
+| Abstruct| Abstruct            |
 
 ### config
 *no test code*

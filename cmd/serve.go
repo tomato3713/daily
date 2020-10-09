@@ -17,18 +17,29 @@ package cmd
 
 import (
 	"fmt"
+	"html/template"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"os"
+	"path/filepath"
 
+	"github.com/pkg/browser"
+	"github.com/shurcooL/github_flavored_markdown"
 	"github.com/spf13/cobra"
 )
+
+type entry struct {
+	Name string
+	Body template.HTML
+}
 
 // serveCmd represents the serve command
 var serveCmd = &cobra.Command{
 	Use:   "serve",
 	Short: "Start http server",
 	Long:  `Start http server to display past daily reports.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("serve called")
-	},
+	Run:   Serve,
 }
 
 func init() {
@@ -43,4 +54,74 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// serveCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func Serve(cmd *cobra.Command, args []string) {
+	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+		if req.URL.Path == "/" {
+			f, err := os.Open(config.ReportDir)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			defer f.Close()
+			files, err := f.Readdirnames(-1)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			files = sortByDate(files)
+			var entries []entry
+			for _, file := range files {
+				entries = append(entries, entry{
+					Name: file,
+				})
+			}
+			w.Header().Set("content-type", "text/html")
+			var t *template.Template
+			if config.TemplateFile == "" {
+				fmt.Println("Not implemented. please indicate TemplateIndexFile.")
+				return
+			}
+			t, err = template.ParseFiles(config.Serve.TemplateIndexFile)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			err = t.Execute(w, entries)
+			if err != nil {
+				log.Println(err)
+			}
+		} else {
+			p := filepath.Join(config.ReportDir, req.URL.Path)
+			b, err := ioutil.ReadFile(p)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			body := string(github_flavored_markdown.Markdown(b))
+			var t *template.Template
+			if config.Serve.TemplateBodyFile == "" {
+				fmt.Println("Not implemented. please indicate TemplateBodyFile.")
+				return
+			}
+			t, err = template.ParseFiles(config.Serve.TemplateBodyFile)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			err = t.Execute(w, entry{
+				Name: req.URL.Path,
+				Body: template.HTML(body),
+			})
+		}
+	})
+	http.Handle("/assets/", http.StripPrefix("/assets", http.FileServer(http.Dir(config.Serve.AssetsDir))))
+
+	port := ":8080"
+	url := "http://localhost" + port
+
+	browser.OpenURL(url)
+	http.ListenAndServe(port, nil)
 }

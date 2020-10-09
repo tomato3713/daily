@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"sort"
 )
 
 func runCmd(command string, r io.Reader, w io.Writer, args ...string) error {
@@ -23,4 +24,9 @@ func runCmd(command string, r io.Reader, w io.Writer, args ...string) error {
 func fileExists(filename string) bool {
 	_, err := os.Stat(filename)
 	return err == nil
+}
+
+func sortByDate(files []string) []string {
+	sort.Sort(sort.Reverse(sort.StringSlice(files)))
+	return files
 }
