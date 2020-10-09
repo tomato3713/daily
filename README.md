@@ -30,11 +30,11 @@ Serve daily report directory.
 daily serve
 ```
 
-| Env Var | Value               |
-| ---     | ---                 |
-| Name    | Report file name    |
-| Date    | Report Written Date |
-| Abstruct| Abstruct            |
+| Env Var | Value               | Implement | 
+| ---     | ---                 | ---       |
+| Name    | Report file name    | O         |
+| Date    | Report Written Date | X         |
+| Abstruct| Abstruct            | X         |
 
 ### config
 *no test code*
@@ -59,7 +59,8 @@ pluginDir = "path to plugin directory"
 Editor = "code"
 
 [Serve]
-templateBodyFile = "path to index.html"
+templateIndexFile = "path to index.tmpl"
+templateBodyFile = "path to body.tmpl"
 assetsDir = "path to assets directory"
 ```
 

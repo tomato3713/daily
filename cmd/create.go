@@ -73,7 +73,8 @@ TemplateFile = "$HOME/.config/template.md"
 PluginDir = "$HOME/.config/plugins"
 
 [Serve]
-TemplateBodyFile = "$HOME/.config/index.html"
+TemplateIndexFile = "$HOME/.config/index.tmpl"
+TemplateBodyFile = "$HOME/.config/body.tmpl"
 AssetsDir = "$HOME/.config/assets"`))
 
 		if err = ioutil.WriteFile(cfgFile, contents, 0644); err != nil {
