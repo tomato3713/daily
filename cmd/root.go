@@ -46,7 +46,7 @@ var debug bool
 var config Config
 
 func (c Config) String() string {
-	return fmt.Sprintf("Daily Report Dir: %s\nFile Name Format: %s\nDaily report Template File: %s\nPlugins Dir: %s\nServe:\n\tTemplate Index File: %s\n\tTemplate Body File: %s\n\tAssets Dir: %s\n",
+	return fmt.Sprintf("Daily Report Dir: %s\nDaily report Template File: %s\nPlugins Dir: %s\nServe:\n\tTemplate Index File: %s\n\tTemplate Body File: %s\n\tAssets Dir: %s\n",
 		c.ReportDir, c.TemplateFile, c.PluginDir, c.Serve.TemplateIndexFile, c.Serve.TemplateBodyFile, c.Serve.AssetsDir)
 }
 
